@@ -41,9 +41,9 @@ public class CameraFollow : MonoBehaviour
         Camera.main.transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, newRotation, .05f);
 
         Vector3 inverseVeloc = myBody.velocity.normalized * -1;
-
+        
         //Reduce the effect of y in moving the camera.
-        //inverseVeloc.y *= .2f;
+        inverseVeloc.y *= 0f;
 
         RaycastHit hit;
 
