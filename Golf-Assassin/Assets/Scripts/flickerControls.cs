@@ -21,7 +21,7 @@ public class flickerControls : MonoBehaviour
     void Awake()
     {
         angleBar = GameObject.Find("Angle Bar").GetComponent<AngleBarController>();
-        scoreThing = GameObject.Find("Score").GetComponent<ScoreController>();
+        //scoreThing = GameObject.Find("Score").GetComponent<ScoreController>();
     }
     // Start is called before the first frame update
     void Start()
@@ -71,7 +71,7 @@ public class flickerControls : MonoBehaviour
     {
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, ((PointerEventData)eventData).position, null, out startDragPos);
         Debug.Log("BEGIN");
-        scoreThing.MinusScore(1);
+        //scoreThing.MinusScore(1);
     }
 
     public void OnDragEnd(BaseEventData eventData)
@@ -87,10 +87,15 @@ public class flickerControls : MonoBehaviour
             //grounded = false;
             //Debug.Log("END");
             //flickDir = Vector3.forward;
-            flickDir = Quaternion.AngleAxis(angleBar.GetAngle(), Vector3.left) * Vector3.forward;
-            Debug.Log(flickDir * (endDragPos - startDragPos).magnitude * powerMod);
-            rgbd.AddForce((flickDir * (endDragPos - startDragPos).magnitude)/5, ForceMode.Impulse);
+            Vector3 forward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z);
+            flickDir = Quaternion.AngleAxis(angleBar.GetAngle(), Vector3.left) * forward;
 
+            Debug.Log(flickDir * (endDragPos - startDragPos).magnitude * powerMod);
+
+            Vector3 force = flickDir * (endDragPos - startDragPos).magnitude / 5;
+            force.y = Mathf.Abs(force.y);
+
+            rgbd.AddForce(force, ForceMode.Impulse);
         }
         else
         {
