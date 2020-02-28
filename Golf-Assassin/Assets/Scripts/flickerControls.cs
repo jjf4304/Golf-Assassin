@@ -21,7 +21,7 @@ public class flickerControls : MonoBehaviour
     void Awake()
     {
         angleBar = GameObject.Find("Angle Bar").GetComponent<AngleBarController>();
-        scoreThing = GameObject.Find("Score").GetComponent<ScoreController>();
+        //scoreThing = GameObject.Find("Score").GetComponent<ScoreController>();
     }
     // Start is called before the first frame update
     void Start()
@@ -71,7 +71,7 @@ public class flickerControls : MonoBehaviour
     {
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, ((PointerEventData)eventData).position, null, out startDragPos);
         Debug.Log("BEGIN");
-        scoreThing.MinusScore(1);
+        //scoreThing.MinusScore(1);
     }
 
     public void OnDragEnd(BaseEventData eventData)
