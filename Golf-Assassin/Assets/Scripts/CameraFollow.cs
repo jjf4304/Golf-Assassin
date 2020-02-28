@@ -13,6 +13,10 @@ public class CameraFollow : MonoBehaviour
     public float minDistance = 3;
     Vector3 lerpPosition = Vector3.zero;
 
+    public enum Turn {Left, Right, Stop};
+    public Turn currentTurn = Turn.Stop;
+
+    bool stopCamera;
     float currentDistance;
 
 
@@ -21,12 +25,14 @@ public class CameraFollow : MonoBehaviour
     {
         //Save our rigidbody so we can use it later.
         myBody = GetComponent<Rigidbody>();
-      
+        stopCamera = false;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        RotateCamera();
+
         //Camera.main.transform.Rotate(Quaternion.LookRotation(Camera.main.transform.forward, Camera.main.transform.up));
         //Camera.main.transform.LookAt(transform.position);
 
@@ -70,9 +76,35 @@ public class CameraFollow : MonoBehaviour
             //move away from the golf ball
             Camera.main.transform.position = Vector3.MoveTowards(Camera.main.transform.position, transform.position, -.1f);
         }
+    }
 
+    void RotateCamera()
+    {
+        switch (currentTurn)
+        {
+            case Turn.Left:
+                Camera.main.transform.LookAt(transform);
+                Camera.main.transform.Translate(-1 * Vector3.right * Time.deltaTime * 5);
+                break;
+            case Turn.Right:
+                Camera.main.transform.LookAt(transform);
+                Camera.main.transform.Translate(Vector3.right * Time.deltaTime * 5);
+                break;
+        }
+    }
 
+    public void TurnLeft()
+    {
+        currentTurn = Turn.Left;
+    }
 
-        
+    public void TurnRight()
+    {
+        currentTurn = Turn.Right;
+    }
+
+    public void StopTurn()
+    {
+        currentTurn = Turn.Stop;
     }
 }
