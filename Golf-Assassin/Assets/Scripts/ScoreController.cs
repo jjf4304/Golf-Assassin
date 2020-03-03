@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class ScoreController : MonoBehaviour
 {
-    private int score = 10;
+    private int score = 0;
+    private int strokes = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,8 +21,17 @@ public class ScoreController : MonoBehaviour
         Values.Score = score;
     }
 
-    public void MinusScore(int minusScore)
+    public void PlusScore(int plusScore)
     {
-        score = score - minusScore;
+        score = score + plusScore;
+    }
+
+    public void PlusStroke(int plusStroke)
+    {
+        strokes = strokes + plusStroke;
+    } 
+    public int GetStrokes()
+    {
+        return strokes;
     }
 }

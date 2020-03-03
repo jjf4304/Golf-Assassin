@@ -5,6 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class EnemyController : MonoBehaviour
 {
+    private ScoreController scoreThing;
+
+    void Awake()
+    {
+        scoreThing = GameObject.Find("Score").GetComponent<ScoreController>();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -23,8 +29,10 @@ public class EnemyController : MonoBehaviour
         {
             Values.DestroyedTargets++;
             Debug.Log(Values.TotalTargets);
+            scoreThing.PlusScore(10);
             if (Values.DestroyedTargets == Values.TotalTargets)
             {
+                scoreThing.PlusScore(-1 * scoreThing.GetStrokes());
                 SceneManager.LoadScene("EndGame");
             }
             Destroy(gameObject);

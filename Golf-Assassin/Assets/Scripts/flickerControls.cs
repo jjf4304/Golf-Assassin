@@ -55,7 +55,7 @@ public class flickerControls : MonoBehaviour
         timeForFlick = Time.time;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, ((PointerEventData)eventData).position, null, out startDragPos);
         Debug.Log("BEGIN");
-        scoreThing.MinusScore(1);
+        scoreThing.PlusStroke(1);
     }
 
     public void OnDragEnd(BaseEventData eventData)
