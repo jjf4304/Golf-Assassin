@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EnemyController : MonoBehaviour
 {
@@ -20,7 +21,12 @@ public class EnemyController : MonoBehaviour
     {
         if(other.tag == "Player")
         {
-            Debug.Log("Player hit me");
+            Values.DestroyedTargets++;
+            Debug.Log(Values.TotalTargets);
+            if (Values.DestroyedTargets == Values.TotalTargets)
+            {
+                SceneManager.LoadScene("EndGame");
+            }
             Destroy(gameObject);
         }
     }

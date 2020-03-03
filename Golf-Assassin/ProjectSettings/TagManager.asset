@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - GroundSurface
+  - Manager
+  - Click
+  - Enemy
   layers:
   - Default
   - TransparentFX

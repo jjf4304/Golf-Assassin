@@ -9,13 +9,15 @@ public class ScoreController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Values.Score = score;
+        Values.TotalTargets = GameObject.FindGameObjectsWithTag("Enemy").Length;
     }
 
     // Update is called once per frame
     void Update()
     {
         gameObject.GetComponent<Text>().text = "Score: " + score.ToString();
+        Values.Score = score;
     }
 
     public void MinusScore(int minusScore)

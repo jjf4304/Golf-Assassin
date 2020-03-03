@@ -8,6 +8,7 @@ public class flickerControls : MonoBehaviour
     public float powerMod;
     public RectTransform rectTransform;
     public Vector2 touch;
+    public AudioSource hit;
 
     private float timeForFlick;
     private Vector2 startDragPos, endDragPos;
@@ -78,12 +79,13 @@ public class flickerControls : MonoBehaviour
             force.y = Mathf.Abs(force.y);
 
             rgbd.AddForce(force, ForceMode.Impulse);
+            hit.Play();
         }
         else
         {
             rgbd.AddForce((endDragPos - startDragPos).normalized*powerMod);
+            hit.Play();
         }
-        
     }
 
     private void OnCollisionEnter(Collision collision)
