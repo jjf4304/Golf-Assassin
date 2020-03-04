@@ -5,33 +5,59 @@ using UnityEngine.UI;
 
 public class ScoreController : MonoBehaviour
 {
-    private int score = 0;
-    private int strokes = 0;
+    public Text score;
+    public Text strokes;
+
     // Start is called before the first frame update
     void Start()
     {
-        Values.Score = score;
         Values.TotalTargets = GameObject.FindGameObjectsWithTag("Enemy").Length;
     }
 
     // Update is called once per frame
     void Update()
     {
-        gameObject.GetComponent<Text>().text = "Score: " + score.ToString();
-        Values.Score = score;
+        score.text = GetScorePhrase();
+        strokes.text = Values.Strokes.ToString();
     }
 
-    public void PlusScore(int plusScore)
+    string GetScorePhrase()
     {
-        score = score + plusScore;
-    }
+        string phrase = "";
 
-    public void PlusStroke(int plusStroke)
-    {
-        strokes = strokes + plusStroke;
-    } 
-    public int GetStrokes()
-    {
-        return strokes;
+        if (Values.Strokes == 0)
+        {
+            phrase = "-";
+        }
+        else if (Values.Strokes == 1)
+        {
+            phrase = "Hole-In-One";
+        }
+        else if (Values.Strokes == (Values.Par - 2))
+        {
+            phrase = "Eagle";
+        }
+        else if (Values.Strokes == (Values.Par - 1))
+        {
+            phrase = "Birdie";
+        }
+        else if (Values.Strokes == Values.Par)
+        {
+            phrase = "Par";
+        }
+        else if (Values.Strokes == (Values.Par + 1))
+        {
+            phrase = "Bogie";
+        }
+        else if (Values.Strokes == (Values.Par + 2))
+        {
+            phrase = "Double Bogie";
+        }
+        else if (Values.Strokes >= (Values.Par + 3))
+        {
+            phrase = "You suck";
+        }
+        Values.Score = phrase;
+        return phrase;
     }
 }

@@ -75,8 +75,8 @@ public class flickerControls : MonoBehaviour
         if(grounded)
             holdingFinger = true;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, ((PointerEventData)eventData).position, null, out startDragPos);
-        Debug.Log("BEGIN");
-        scoreThing.PlusStroke(1);
+
+        Values.Strokes++;
     }
 
     public void OnDragEnd(BaseEventData eventData)

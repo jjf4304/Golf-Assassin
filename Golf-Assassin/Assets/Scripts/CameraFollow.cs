@@ -84,11 +84,11 @@ public class CameraFollow : MonoBehaviour
         {
             case Turn.Left:
                 Camera.main.transform.LookAt(transform);
-                Camera.main.transform.Translate(-1 * Vector3.right * Time.deltaTime * 5);
+                Camera.main.transform.Translate(Vector3.right * Time.deltaTime * 10);
                 break;
             case Turn.Right:
                 Camera.main.transform.LookAt(transform);
-                Camera.main.transform.Translate(Vector3.right * Time.deltaTime * 5);
+                Camera.main.transform.Translate(-1 * Vector3.right * Time.deltaTime * 10);
                 break;
         }
     }
