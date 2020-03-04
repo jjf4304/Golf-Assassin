@@ -53,15 +53,14 @@ public class flickerControls : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (grounded && rgbd.velocity.magnitude < 3.5 && rgbd.velocity.magnitude > .0001)
         {
             rgbd.velocity = Vector3.zero;
             Vector3 direction = transform.position - Camera.main.transform.position;
-            Quaternion newRotation = Quaternion.LookRotation(direction, Vector3.up);
-            transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, newRotation, .05f);
-            Debug.Log("ADADD");
+            //Quaternion newRotation = Quaternion.LookRotation(direction, Vector3.up);
+            //transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, newRotation, 1f);
         }
 
         if (holdingFinger)
@@ -75,7 +74,6 @@ public class flickerControls : MonoBehaviour
         if(grounded)
             holdingFinger = true;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, ((PointerEventData)eventData).position, null, out startDragPos);
-        Debug.Log("BEGIN");
         scoreThing.PlusStroke(1);
     }
 
@@ -89,15 +87,22 @@ public class flickerControls : MonoBehaviour
             float angle = minAngle + timeForFlick;
             if (angle > maxAngle)
                 angle = maxAngle;
-            Debug.Log("Angle: " + angle);
             timeForFlick = 0f;
             Vector3 forward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z);
-            flickDir = Quaternion.AngleAxis(angle, Vector3.left) * forward;
-
+            flickDir = Quaternion.AngleAxis(angle, Camera.main.transform.right) * forward;
             //Debug.Log(flickDir * (endDragPos - startDragPos).magnitude * powerMod);
-            float forceMod = ((endDragPos - startDragPos).magnitude / 5) / timeForFlick;
+            float forceMod = (startDragPos - endDragPos).magnitude / 20f;
+            Debug.Log(forceMod);
+            if(forceMod > 50f)
+            {
+                forceMod = 50;
+                Debug.Log("ADADAD");
+            }
 
-            Vector3 force = flickDir * (endDragPos - startDragPos).magnitude / 5;
+
+            
+
+            Vector3 force = flickDir * forceMod;
             force.y = Mathf.Abs(force.y);
 
             rgbd.AddForce(force, ForceMode.Impulse);
