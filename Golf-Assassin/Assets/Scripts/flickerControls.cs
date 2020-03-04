@@ -26,15 +26,7 @@ public class flickerControls : MonoBehaviour
     private Touch touchCtrl;
     private bool grounded, holdingFinger;
     private Rigidbody rgbd;
-    private AngleBarController angleBar;
-    private ScoreController scoreThing;
-    //To get the current number of the angleBar use angleBar.GetAngle();
 
-    void Awake()
-    {
-        angleBar = GameObject.Find("Angle Bar").GetComponent<AngleBarController>();
-        scoreThing = GameObject.Find("Score").GetComponent<ScoreController>();
-    }
     // Start is called before the first frame update
     void Start()
     {
@@ -54,10 +46,8 @@ public class flickerControls : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Debug.Log(grounded);
         if (grounded && rgbd.velocity.magnitude < 3.5 && rgbd.velocity.magnitude > .0001)
         {
-            Debug.Log("GROUNDED");
             rgbd.velocity = Vector3.zero;
             Vector3 direction = transform.position - Camera.main.transform.position;
             //Quaternion newRotation = Quaternion.LookRotation(direction, Vector3.up);
@@ -92,17 +82,12 @@ public class flickerControls : MonoBehaviour
             timeForFlick = 0f;
             Vector3 forward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z);
             flickDir = Quaternion.AngleAxis(angle, Camera.main.transform.right) * forward;
-            //Debug.Log(flickDir * (endDragPos - startDragPos).magnitude * powerMod);
+
             float forceMod = (startDragPos - endDragPos).magnitude / 20f;
-            Debug.Log(forceMod);
             if(forceMod > 50f)
             {
                 forceMod = 50;
-                Debug.Log("ADADAD");
             }
-
-
-            
 
             Vector3 force = flickDir * forceMod;
             force.y = Mathf.Abs(force.y);
