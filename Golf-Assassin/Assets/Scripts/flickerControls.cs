@@ -45,7 +45,6 @@ public class flickerControls : MonoBehaviour
         if(maxAngle == 0f)
             maxAngle = 55f;
         timeForFlick = 0f;
-        grounded = true;
         holdingFinger = false;
         startDragPos = Vector2.zero;
         endDragPos = Vector2.zero;
@@ -55,8 +54,10 @@ public class flickerControls : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        Debug.Log(grounded);
         if (grounded && rgbd.velocity.magnitude < 3.5 && rgbd.velocity.magnitude > .0001)
         {
+            Debug.Log("GROUNDED");
             rgbd.velocity = Vector3.zero;
             Vector3 direction = transform.position - Camera.main.transform.position;
             //Quaternion newRotation = Quaternion.LookRotation(direction, Vector3.up);

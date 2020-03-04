@@ -23,17 +23,9 @@ public class ScoreController : MonoBehaviour
 
     string GetScorePhrase()
     {
-        string phrase = "";
+        string phrase = "-";
 
-        if (Values.Strokes == 0)
-        {
-            phrase = "-";
-        }
-        else if (Values.Strokes == 1)
-        {
-            phrase = "Hole-In-One";
-        }
-        else if (Values.Strokes == (Values.Par - 2))
+        if (Values.Strokes == (Values.Par - 2))
         {
             phrase = "Eagle";
         }
@@ -56,6 +48,10 @@ public class ScoreController : MonoBehaviour
         else if (Values.Strokes >= (Values.Par + 3))
         {
             phrase = "You suck";
+        }
+        else if (Values.Strokes < (Values.Par - 2))
+        {
+            phrase = "Impossible";
         }
         Values.Score = phrase;
         return phrase;
