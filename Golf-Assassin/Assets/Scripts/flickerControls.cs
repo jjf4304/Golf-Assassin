@@ -5,7 +5,17 @@ using UnityEngine.EventSystems;
 
 public class flickerControls : MonoBehaviour
 {
-    public float powerMod;
+
+    /* Explanation:
+     * Player starts flick, and how long the hold the flick determines the launch angle
+     * Player ends flick and how long the flick was determines the launch power
+     * Ball is launched directly ahead at that angle and power
+     * in Air: Each flick moves the ball slightly in the direction of the flick.
+     * 
+     */
+
+
+    public float powerMod, maxAngle, minAngle;
     public RectTransform rectTransform;
     public Vector2 touch;
     public AudioSource hit;
@@ -14,7 +24,7 @@ public class flickerControls : MonoBehaviour
     private Vector2 startDragPos, endDragPos;
     private Vector3 flickDir;
     private Touch touchCtrl;
-    private bool grounded;
+    private bool grounded, holdingFinger;
     private Rigidbody rgbd;
     private AngleBarController angleBar;
     private ScoreController scoreThing;
@@ -30,7 +40,13 @@ public class flickerControls : MonoBehaviour
     {
         rgbd = GetComponent<Rigidbody>();
         //rgbd.freezeRotation = true;
+        if(minAngle == 0f)
+            minAngle = 25f;
+        if(maxAngle == 0f)
+            maxAngle = 55f;
+        timeForFlick = 0f;
         grounded = true;
+        holdingFinger = false;
         startDragPos = Vector2.zero;
         endDragPos = Vector2.zero;
         
@@ -48,11 +64,16 @@ public class flickerControls : MonoBehaviour
             Debug.Log("ADADD");
         }
 
+        if (holdingFinger)
+            timeForFlick += 1f;
+
     }
 
     public void OnDragBegin(BaseEventData eventData)
     {
-        timeForFlick = Time.time;
+        timeForFlick = 0f;
+        if(grounded)
+            holdingFinger = true;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, ((PointerEventData)eventData).position, null, out startDragPos);
         Debug.Log("BEGIN");
         scoreThing.PlusStroke(1);
@@ -63,12 +84,13 @@ public class flickerControls : MonoBehaviour
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, ((PointerEventData)eventData).position, null, out endDragPos);
         if (grounded)
         {
-            timeForFlick = Time.time - timeForFlick;
-
-            Vector2 angleVec = (endDragPos - startDragPos);
-            float angle = angleVec.y / 10;
-            Debug.Log(angle);
-
+            holdingFinger = false;
+            //Vector2 angleVec = (endDragPos - startDragPos);
+            float angle = minAngle + timeForFlick;
+            if (angle > maxAngle)
+                angle = maxAngle;
+            Debug.Log("Angle: " + angle);
+            timeForFlick = 0f;
             Vector3 forward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z);
             flickDir = Quaternion.AngleAxis(angle, Vector3.left) * forward;
 
@@ -83,8 +105,8 @@ public class flickerControls : MonoBehaviour
         }
         else
         {
-            rgbd.AddForce((endDragPos - startDragPos).normalized*powerMod);
-            hit.Play();
+            rgbd.AddForce((endDragPos - startDragPos)/2f);
+            //hit.Play();
         }
     }
 
