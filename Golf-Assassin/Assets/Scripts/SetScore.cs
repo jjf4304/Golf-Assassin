@@ -12,8 +12,8 @@ public class SetScore : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        strokeBox.text = "Total Strokes: " + Values.Strokes;
         parBox.text = "Par: " + Values.Par;
+        strokeBox.text = "Total Strokes: " + Values.Strokes;
         scoreBox.text = "Score: " + Values.Score;
     }
 }
