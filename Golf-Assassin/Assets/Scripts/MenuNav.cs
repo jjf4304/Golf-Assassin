@@ -7,7 +7,9 @@ public class MenuNav : MonoBehaviour
 {
     public void LoadGame()
     {
+        Values.HoleIndex = 0;
         Values.DestroyedTargets = 0;
+        Values.Strokes = 0;
         SceneManager.LoadScene("SampleScene");
     }
 

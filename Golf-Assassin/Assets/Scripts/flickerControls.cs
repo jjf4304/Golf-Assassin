@@ -65,8 +65,6 @@ public class flickerControls : MonoBehaviour
         if(grounded)
             holdingFinger = true;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, ((PointerEventData)eventData).position, null, out startDragPos);
-
-        Values.Strokes++;
     }
 
     public void OnDragEnd(BaseEventData eventData)
@@ -93,12 +91,13 @@ public class flickerControls : MonoBehaviour
             force.y = Mathf.Abs(force.y);
 
             rgbd.AddForce(force, ForceMode.Impulse);
+
             hit.Play();
+            Values.Strokes++;
         }
         else
         {
             rgbd.AddForce((endDragPos - startDragPos)/2f);
-            //hit.Play();
         }
     }
 

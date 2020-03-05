@@ -8,5 +8,6 @@ public static class Values
     public static int Strokes { get; set; }
     public static int DestroyedTargets { get; set; }
     public static int TotalTargets { get; set; }
-    public static int Par { get; set; } = 9;
+    public static int HoleIndex { get; set; } = 0;
+    public static List<int> Par { get; set; } = new List<int>() { 8 };
 }
