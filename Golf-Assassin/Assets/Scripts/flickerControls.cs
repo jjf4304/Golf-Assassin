@@ -46,58 +46,66 @@ public class flickerControls : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (grounded && rgbd.velocity.magnitude < 3.5 && rgbd.velocity.magnitude > .0001)
+        if (!Values.Paused)
         {
-            rgbd.velocity = Vector3.zero;
-            Vector3 direction = transform.position - Camera.main.transform.position;
-            //Quaternion newRotation = Quaternion.LookRotation(direction, Vector3.up);
-            //transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, newRotation, 1f);
+            if (grounded && rgbd.velocity.magnitude < 3.5 && rgbd.velocity.magnitude > .0001)
+            {
+                rgbd.velocity = Vector3.zero;
+                Vector3 direction = transform.position - Camera.main.transform.position;
+                //Quaternion newRotation = Quaternion.LookRotation(direction, Vector3.up);
+                //transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, newRotation, 1f);
+            }
+
+            if (holdingFinger)
+                timeForFlick += 1f;
         }
-
-        if (holdingFinger)
-            timeForFlick += 1f;
-
     }
 
     public void OnDragBegin(BaseEventData eventData)
     {
-        timeForFlick = 0f;
-        if(grounded)
-            holdingFinger = true;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, ((PointerEventData)eventData).position, null, out startDragPos);
+        if (!Values.Paused)
+        {
+            timeForFlick = 0f;
+            if (grounded)
+                holdingFinger = true;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, ((PointerEventData)eventData).position, null, out startDragPos);
+        }
     }
 
     public void OnDragEnd(BaseEventData eventData)
     {
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, ((PointerEventData)eventData).position, null, out endDragPos);
-        if (grounded)
+        if (!Values.Paused)
         {
-            holdingFinger = false;
-            //Vector2 angleVec = (endDragPos - startDragPos);
-            float angle = minAngle + timeForFlick;
-            if (angle > maxAngle)
-                angle = maxAngle;
-            timeForFlick = 0f;
-            Vector3 forward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z);
-            flickDir = Quaternion.AngleAxis(angle, Camera.main.transform.right) * forward;
-
-            float forceMod = (startDragPos - endDragPos).magnitude / 20f;
-            if(forceMod > 50f)
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, ((PointerEventData)eventData).position, null, out endDragPos);
+            if (grounded)
             {
-                forceMod = 50;
+                holdingFinger = false;
+                //Vector2 angleVec = (endDragPos - startDragPos);
+                float angle = minAngle + timeForFlick;
+                if (angle > maxAngle)
+                    angle = maxAngle;
+                timeForFlick = 0f;
+                Vector3 forward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z);
+                flickDir = Quaternion.AngleAxis(angle, Camera.main.transform.right) * forward;
+
+                float forceMod = (startDragPos - endDragPos).magnitude / 20f;
+                if (forceMod > 50f)
+                {
+                    forceMod = 50;
+                }
+
+                Vector3 force = flickDir * forceMod;
+                force.y = Mathf.Abs(force.y);
+
+                rgbd.AddForce(force, ForceMode.Impulse);
+
+                hit.Play();
+                Values.Strokes++;
             }
-
-            Vector3 force = flickDir * forceMod;
-            force.y = Mathf.Abs(force.y);
-
-            rgbd.AddForce(force, ForceMode.Impulse);
-
-            hit.Play();
-            Values.Strokes++;
-        }
-        else
-        {
-            rgbd.AddForce((endDragPos - startDragPos)/2f);
+            else
+            {
+                rgbd.AddForce((endDragPos - startDragPos) / 2f);
+            }
         }
     }
 
