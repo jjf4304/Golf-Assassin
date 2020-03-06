@@ -98,6 +98,7 @@ public class flickerControls : MonoBehaviour
                 force.y = Mathf.Abs(force.y);
 
                 rgbd.AddForce(force, ForceMode.Impulse);
+                rgbd.AddTorque(Vector3.Cross(force, Vector3.up), ForceMode.Impulse);
 
                 hit.Play();
                 Values.Strokes++;
@@ -105,6 +106,7 @@ public class flickerControls : MonoBehaviour
             else
             {
                 rgbd.AddForce((endDragPos - startDragPos) / 2f);
+              
             }
         }
     }

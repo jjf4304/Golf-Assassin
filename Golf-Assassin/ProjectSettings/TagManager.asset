@@ -8,6 +8,7 @@ TagManager:
   - Manager
   - Click
   - Enemy
+  - Ball
   layers:
   - Default
   - TransparentFX
