@@ -15,14 +15,15 @@ public class flickerControls : MonoBehaviour
      */
 
 
-    public float powerMod, maxAngle, minAngle;
+    public float powerMod, maxAngle, minAngle, inAirRotateSpeed;
     public RectTransform rectTransform;
     public Vector2 touch;
     public AudioSource hit;
+    public Transform tracker;
 
     private float timeForFlick;
     private Vector2 startDragPos, endDragPos;
-    private Vector3 flickDir;
+    private Vector3 flickDir, turnToDir;
     private Touch touchCtrl;
     private bool grounded, holdingFinger;
     private Rigidbody rgbd;
@@ -32,15 +33,15 @@ public class flickerControls : MonoBehaviour
     {
         rgbd = GetComponent<Rigidbody>();
         //rgbd.freezeRotation = true;
-        if(minAngle == 0f)
+        if (minAngle == 0f)
             minAngle = 25f;
-        if(maxAngle == 0f)
+        if (maxAngle == 0f)
             maxAngle = 55f;
         timeForFlick = 0f;
         holdingFinger = false;
         startDragPos = Vector2.zero;
         endDragPos = Vector2.zero;
-        
+
     }
 
     // Update is called once per frame
@@ -48,12 +49,29 @@ public class flickerControls : MonoBehaviour
     {
         if (!Values.Paused)
         {
-            if (grounded && rgbd.velocity.magnitude < 3.5 && rgbd.velocity.magnitude > .0001)
+            tracker.position = transform.position;
+            Debug.Log(grounded);
+            if (grounded && rgbd.velocity.magnitude < 3.5)
             {
+                Debug.Log("ADADADAD");
                 rgbd.velocity = Vector3.zero;
                 Vector3 direction = transform.position - Camera.main.transform.position;
-                //Quaternion newRotation = Quaternion.LookRotation(direction, Vector3.up);
-                //transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, newRotation, 1f);
+                transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, Camera.main.transform.forward, Time.deltaTime * 10f, 0.0f));
+                tracker.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, Camera.main.transform.forward, Time.deltaTime * 10f, 0.0f));
+            }
+            else if (!grounded && turnToDir != Vector3.zero)
+            {
+                Quaternion rotateFrom = tracker.rotation;
+                Quaternion rotateTo = Quaternion.Euler(tracker.forward + turnToDir);
+
+                tracker.rotation = Quaternion.Lerp(rotateFrom, rotateTo, Time.deltaTime * inAirRotateSpeed);
+
+                rgbd.velocity = Vector3.Lerp(rgbd.velocity, tracker.forward * rgbd.velocity.magnitude, Time.deltaTime);
+                turnToDir = Vector3.zero;
+
+               // transform.rotation = Quaternion.Lerp(rotateFrom, rotateTo, Time.deltaTime * inAirRotateSpeed);
+                //rgbd.velocity += transform.forward;
+                //turnToDir = Vector3.zero;
             }
 
             if (holdingFinger)
@@ -105,8 +123,23 @@ public class flickerControls : MonoBehaviour
             }
             else
             {
-                rgbd.AddForce((endDragPos - startDragPos) / 2f);
-              
+                // if drag in -x dir, rotate left, else rotate right
+                Vector3 dragDir = endDragPos - startDragPos;
+                //Quaternion turnRotation;
+                //Quaternion veloRotation = Quaternion.Euler(rgbd.velocity);
+                if (dragDir.x < 0)
+                {
+                    turnToDir = new Vector3(0, -15, 0);
+                }
+                else
+                {
+                    turnToDir = new Vector3(0, 15, 0);
+                }
+
+                //Debug.Log(turnRotation);
+
+                //transform.rotation = Quaternion.Lerp(transform.rotation, dir, Time.time * .1f)
+
             }
         }
     }
@@ -116,6 +149,7 @@ public class flickerControls : MonoBehaviour
         if (collision.gameObject.CompareTag("GroundSurface"))
         {
             grounded = true;
+            turnToDir = Vector3.zero;
         }
     }
 
