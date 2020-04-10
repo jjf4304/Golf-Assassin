@@ -35,8 +35,8 @@ public class movingO : MonoBehaviour
 
     void ChangeDir()
     {
-        Debug.Log("changeDir");
-        dir = new Quaternion(0, rnd.Next(-180, 180), rnd.Next(-180, 180), 1);
+        Debug.LogWarning("changeDir");
+        dir = new Quaternion(0, rnd.Next(0, 360), rnd.Next(0, 360), 1);
         gameObject.transform.rotation = dir; //this is not setting anything for some reason
     }
 }
