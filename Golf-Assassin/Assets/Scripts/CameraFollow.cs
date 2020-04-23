@@ -68,7 +68,8 @@ public class CameraFollow : MonoBehaviour
             float lerpDistance = Vector3.Distance(Camera.main.transform.position, lerpPosition);
 
             Camera.main.transform.position = Vector3.MoveTowards(Camera.main.transform.position, lerpPosition, myBody.velocity.magnitude * followPercentage) ;//Vector3.Lerp(Camera.main.transform.position, lerpPosition, .1f);
-
+            Camera.main.transform.LookAt(myBody.transform.position);
+            //Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, lerpPosition, .5f);
 
         }
         else

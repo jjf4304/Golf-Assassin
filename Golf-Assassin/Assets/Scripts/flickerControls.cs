@@ -6,20 +6,12 @@ using UnityEngine.EventSystems;
 public class flickerControls : MonoBehaviour
 {
 
-    /* Explanation:
-     * Player starts flick, and how long the hold the flick determines the launch angle
-     * Player ends flick and how long the flick was determines the launch power
-     * Ball is launched directly ahead at that angle and power
-     * in Air: Each flick moves the ball slightly in the direction of the flick.
-     * 
-     */
-
-
-    public float powerMod, maxAngle, minAngle, inAirRotateSpeed;
+    public float powerMod, maxAngle, minAngle, inAirRotateSpeed, tempAngle;
     public RectTransform rectTransform;
     public Vector2 touch;
     public AudioSource hit;
     public Transform tracker;
+    public LineRenderer myLine;
 
     private float timeForFlick;
     private Vector2 startDragPos, endDragPos;
@@ -41,7 +33,8 @@ public class flickerControls : MonoBehaviour
         holdingFinger = false;
         startDragPos = Vector2.zero;
         endDragPos = Vector2.zero;
-
+        turnToDir = Vector3.zero;
+        myLine = GetComponent<LineRenderer>();
     }
 
     // Update is called once per frame
@@ -49,29 +42,27 @@ public class flickerControls : MonoBehaviour
     {
         if (!Values.Paused)
         {
-            tracker.position = transform.position;
-            Debug.Log(grounded);
+
             if (grounded && rgbd.velocity.magnitude < 3.5)
             {
-                Debug.Log("ADADADAD");
                 rgbd.velocity = Vector3.zero;
                 Vector3 direction = transform.position - Camera.main.transform.position;
                 transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, Camera.main.transform.forward, Time.deltaTime * 10f, 0.0f));
-                tracker.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, Camera.main.transform.forward, Time.deltaTime * 10f, 0.0f));
             }
-            else if (!grounded && turnToDir != Vector3.zero)
+            else if (!grounded )
             {
-                Quaternion rotateFrom = tracker.rotation;
-                Quaternion rotateTo = Quaternion.Euler(tracker.forward + turnToDir);
+                Vector3 tempVelocity = rgbd.velocity;
+                tempAngle *= .9f;
+                Quaternion tempRot = Quaternion.AngleAxis(Time.deltaTime * tempAngle, Vector3.up);
+                rgbd.velocity = tempRot * rgbd.velocity;
 
-                tracker.rotation = Quaternion.Lerp(rotateFrom, rotateTo, Time.deltaTime * inAirRotateSpeed);
+                if (holdingFinger)
+                {
+                    myLine.SetWidth(1f, 1f);
+                    myLine.SetPosition(0, transform.position);
+                    myLine.SetPosition(1, transform.position + Vector3.up*10f);
+                }
 
-                rgbd.velocity = Vector3.Lerp(rgbd.velocity, tracker.forward * rgbd.velocity.magnitude, Time.deltaTime);
-                turnToDir = Vector3.zero;
-
-               // transform.rotation = Quaternion.Lerp(rotateFrom, rotateTo, Time.deltaTime * inAirRotateSpeed);
-                //rgbd.velocity += transform.forward;
-                //turnToDir = Vector3.zero;
             }
 
             if (holdingFinger)
@@ -92,6 +83,7 @@ public class flickerControls : MonoBehaviour
 
     public void OnDragEnd(BaseEventData eventData)
     {
+        Debug.Log("EVENT END LOG");
         if (!Values.Paused)
         {
             RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, ((PointerEventData)eventData).position, null, out endDragPos);
@@ -124,21 +116,20 @@ public class flickerControls : MonoBehaviour
             else
             {
                 // if drag in -x dir, rotate left, else rotate right
-                Vector3 dragDir = endDragPos - startDragPos;
-                //Quaternion turnRotation;
-                //Quaternion veloRotation = Quaternion.Euler(rgbd.velocity);
+                Vector2 dragDir = endDragPos - startDragPos;
+                Debug.Log("END OF DRAG");
+                //dragDir /= 200f;
+                float dist = dragDir.magnitude / 100f;
+
                 if (dragDir.x < 0)
                 {
-                    turnToDir = new Vector3(0, -15, 0);
+                    tempAngle = -inAirRotateSpeed*dist;
                 }
                 else
                 {
-                    turnToDir = new Vector3(0, 15, 0);
+                    tempAngle = inAirRotateSpeed*dist;
                 }
 
-                //Debug.Log(turnRotation);
-
-                //transform.rotation = Quaternion.Lerp(transform.rotation, dir, Time.time * .1f)
 
             }
         }
@@ -146,6 +137,7 @@ public class flickerControls : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        turnToDir = Vector3.zero;
         if (collision.gameObject.CompareTag("GroundSurface"))
         {
             grounded = true;
