@@ -19,6 +19,7 @@ public class flickerControls : MonoBehaviour
     private Touch touchCtrl;
     private bool grounded, holdingFinger;
     private Rigidbody rgbd;
+    private int counter;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +36,7 @@ public class flickerControls : MonoBehaviour
         endDragPos = Vector2.zero;
         turnToDir = Vector3.zero;
         myLine = GetComponent<LineRenderer>();
+        counter = 0;
     }
 
     // Update is called once per frame
@@ -42,12 +44,21 @@ public class flickerControls : MonoBehaviour
     {
         if (!Values.Paused)
         {
-
-            if (grounded && rgbd.velocity.magnitude < 3.5)
+            //Debug.Log(rgbd.velocity.magnitude);
+            if (grounded && rgbd.velocity.magnitude < 2)
             {
-                rgbd.velocity = Vector3.zero;
-                Vector3 direction = transform.position - Camera.main.transform.position;
-                transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, Camera.main.transform.forward, Time.deltaTime * 10f, 0.0f));
+                counter++;
+
+                if (counter > 50)
+                {
+                    rgbd.velocity = Vector3.zero;
+                    Vector3 direction = transform.position - Camera.main.transform.position;
+                    transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, Camera.main.transform.forward, Time.deltaTime * 10f, 0.0f));
+                }
+            }
+            else if(grounded && rgbd.velocity.magnitude >= 2)
+            {
+                counter = 0;
             }
             else if (!grounded )
             {
@@ -62,7 +73,6 @@ public class flickerControls : MonoBehaviour
                     myLine.SetPosition(0, transform.position);
                     myLine.SetPosition(1, transform.position + Vector3.up*10f);
                 }
-
             }
 
             if (holdingFinger)

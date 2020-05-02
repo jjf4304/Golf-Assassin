@@ -12,14 +12,14 @@ public class IndicatorBob : MonoBehaviour
     void Start()
     {
         max = gameObject.transform.position.y;
-        min = max - 5;
+        min = max - 3;
         t = 0f;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        gameObject.transform.Rotate(Vector3.up);
+        gameObject.transform.Rotate(new Vector3(1,0,0));
         gameObject.transform.position = new Vector3(gameObject.transform.position.x, Mathf.Lerp(max, min, t), gameObject.transform.position.z);
         t += 0.01f;
         if (t > 1.0f)

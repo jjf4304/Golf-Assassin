@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class EnemyController : MonoBehaviour
 {
+    public GameObject indicator;
+
     void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player")
@@ -17,6 +19,7 @@ public class EnemyController : MonoBehaviour
             }
 
             Destroy(gameObject);
+            Destroy(indicator);
         }
     }
 }
