@@ -36,7 +36,7 @@ public class flickerControls : MonoBehaviour
         endDragPos = Vector2.zero;
         turnToDir = Vector3.zero;
         myLine = GetComponent<LineRenderer>();
-        counter = 0;
+        counter = 50;
     }
 
     // Update is called once per frame

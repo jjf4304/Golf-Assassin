@@ -8,7 +8,9 @@ public class StopMusic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (SceneManager.GetActiveScene().name == "SampleScene")
+        if (SceneManager.GetActiveScene().name != "MainMenu" &&
+            SceneManager.GetActiveScene().name != "HelpMenu" &&
+            SceneManager.GetActiveScene().name != "LevelSelect")
         {
             Destroy(gameObject);
         }

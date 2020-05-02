@@ -13,6 +13,7 @@ public class MenuNav : MonoBehaviour
         Values.HoleIndex = 0;
         Values.DestroyedTargets = 0;
         Values.Strokes = 0;
+        Values.CourseScore = 0;
 
         if (Values.Paused)
         {
@@ -32,6 +33,21 @@ public class MenuNav : MonoBehaviour
         SceneManager.LoadScene(Values.HoleNames[Values.HoleIndex]);
     }
 
+    public void LoadScene(string scene)
+    {
+        // Reset values
+        if (Values.Paused)
+        {
+            Time.timeScale = 1f;
+            Values.Paused = false;
+        }
+
+        Values.DestroyedTargets = 0;
+        Values.Strokes = 0;
+        Values.CourseScore = 0;
+        SceneManager.LoadScene(scene);
+    }
+
     public void RestartLevel()
     {
         Values.DestroyedTargets = 0;
@@ -44,20 +60,6 @@ public class MenuNav : MonoBehaviour
         }
 
         SceneManager.LoadScene(Values.HoleNames[Values.HoleIndex]);
-    }
-
-    public void LoadHelpMenu()
-    {
-        SceneManager.LoadScene("HelpMenu");
-    }
-
-    public void ReturnToMainMenu()
-    {
-        // Reset values
-        Time.timeScale = 1f;
-        Values.Paused = false;
-
-        SceneManager.LoadScene("MainMenu");
     }
 
     public void ExitGame()
