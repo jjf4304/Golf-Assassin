@@ -84,7 +84,6 @@ public class flickerControls : MonoBehaviour
     {
         if (!Values.Paused)
         {
-            Debug.Log(grounded);
             timeForFlick = 0f;
             if (grounded)
                 holdingFinger = true;
@@ -128,7 +127,6 @@ public class flickerControls : MonoBehaviour
             {
                 // if drag in -x dir, rotate left, else rotate right
                 Vector2 dragDir = endDragPos - startDragPos;
-                Debug.Log("END OF DRAG");
                 //dragDir /= 200f;
                 float dist = dragDir.magnitude / 100f;
 
