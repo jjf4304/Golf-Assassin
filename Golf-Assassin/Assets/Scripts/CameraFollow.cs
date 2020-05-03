@@ -22,6 +22,7 @@ public class CameraFollow : MonoBehaviour
     float maxCameraVerticalAngle = .2f;
 
 
+
     // Start is called before the first frame update
     void Start()
     {
