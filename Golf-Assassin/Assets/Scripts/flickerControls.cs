@@ -84,6 +84,7 @@ public class flickerControls : MonoBehaviour
     {
         if (!Values.Paused)
         {
+            Debug.Log(grounded);
             timeForFlick = 0f;
             if (grounded)
                 holdingFinger = true;
