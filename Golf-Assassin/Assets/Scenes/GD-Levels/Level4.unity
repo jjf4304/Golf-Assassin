@@ -60051,7 +60051,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraDistance: 6
-  followPercentage: 0.2
+  followPercentage: 0.5
   minDistance: 3
   currentTurn: 2
 --- !u!114 &1328755307
