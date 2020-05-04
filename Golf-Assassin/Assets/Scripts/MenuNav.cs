@@ -25,11 +25,21 @@ public class MenuNav : MonoBehaviour
 
     public void LoadNextLevel()
     {
-        // Reset values
-        Values.HoleIndex++;
-        Values.DestroyedTargets = 0;
-        Values.Strokes = 0;
-        SceneManager.LoadScene(Values.HoleNames[Values.HoleIndex]);
+        if(Values.HoleIndex < Values.HoleNames.Count-1)
+        {
+            // Reset values
+            Values.HoleIndex++;
+            Values.DestroyedTargets = 0;
+            Values.Strokes = 0;
+            SceneManager.LoadScene(Values.HoleNames[Values.HoleIndex]);
+        }
+        else
+        {
+            GameObject nextButton = GameObject.FindGameObjectWithTag("NextLevel");
+            nextButton.SetActive(false);
+        }
+
+       
     }
 
     public void LoadScene(string scene)

@@ -11,6 +11,6 @@ public static class Values
     public static int DestroyedTargets { get; set; }
     public static int TotalTargets { get; set; }
     public static int HoleIndex { get; set; } = 0;
-    public static List<string> HoleNames = new List<string>() { "SampleScene", "Level2", "Level3", "Level4", "Level5" };
-    public static List<int> HolePars = new List<int>() { 8, 15, 30, 5, 3};
+    public static List<string> HoleNames = new List<string>() { "SampleScene", "Level2", "Level3", "Level4"};
+    public static List<int> HolePars = new List<int>() { 8, 15, 30, 5};
 }
