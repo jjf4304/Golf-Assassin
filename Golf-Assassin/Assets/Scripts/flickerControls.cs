@@ -11,12 +11,13 @@ public class flickerControls : MonoBehaviour
     public Vector2 touch;
     public AudioSource hit;
     public Transform tracker;
+    public LineRenderer myLine;
 
     private float timeForFlick;
     private Vector2 startDragPos, endDragPos;
     private Vector3 flickDir, turnToDir;
     private Touch touchCtrl;
-    private bool grounded, holdingFinger, stoppedMoving;
+    private bool grounded, holdingFinger;
     private Rigidbody rgbd;
     private int counter;
 
@@ -34,6 +35,7 @@ public class flickerControls : MonoBehaviour
         startDragPos = Vector2.zero;
         endDragPos = Vector2.zero;
         turnToDir = Vector3.zero;
+        myLine = GetComponent<LineRenderer>();
         counter = 50;
     }
 
@@ -47,9 +49,8 @@ public class flickerControls : MonoBehaviour
             {
                 counter++;
 
-                if (counter > 40)
+                if (counter > 50)
                 {
-                    stoppedMoving = true;
                     rgbd.velocity = Vector3.zero;
                     Vector3 direction = transform.position - Camera.main.transform.position;
                     transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, Camera.main.transform.forward, Time.deltaTime * 10f, 0.0f));
@@ -66,6 +67,12 @@ public class flickerControls : MonoBehaviour
                 Quaternion tempRot = Quaternion.AngleAxis(Time.deltaTime * tempAngle, Vector3.up);
                 rgbd.velocity = tempRot * rgbd.velocity;
 
+                if (holdingFinger)
+                {
+                    myLine.SetWidth(1f, 1f);
+                    myLine.SetPosition(0, transform.position);
+                    myLine.SetPosition(1, transform.position + Vector3.up*10f);
+                }
             }
 
             if (holdingFinger)
@@ -90,7 +97,7 @@ public class flickerControls : MonoBehaviour
         if (!Values.Paused)
         {
             RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, ((PointerEventData)eventData).position, null, out endDragPos);
-            if (grounded && stoppedMoving)
+            if (grounded)
             {
                 holdingFinger = false;
                 //Vector2 angleVec = (endDragPos - startDragPos);
@@ -104,7 +111,7 @@ public class flickerControls : MonoBehaviour
                 float forceMod = (startDragPos - endDragPos).magnitude / 20f;
                 if (forceMod > 50f)
                 {
-                    forceMod = 50f;
+                    forceMod = 50;
                 }
 
                 Vector3 force = flickDir * forceMod;
@@ -115,7 +122,6 @@ public class flickerControls : MonoBehaviour
 
                 hit.Play();
                 Values.Strokes++;
-                stoppedMoving = false;
             }
             else
             {
