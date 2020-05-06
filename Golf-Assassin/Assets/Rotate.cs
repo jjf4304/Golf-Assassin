@@ -12,6 +12,7 @@ public class Rotate : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(!Values.Paused)
         transform.RotateAround(transform.position, vectorToRotateAround, speed);
     }
 }

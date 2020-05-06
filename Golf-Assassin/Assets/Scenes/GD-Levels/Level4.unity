@@ -32044,7 +32044,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraDistance: 6
-  followPercentage: 0.2
+  followPercentage: 0.5
   minDistance: 3
   currentTurn: 2
 --- !u!114 &1328755307
@@ -32068,7 +32068,6 @@ MonoBehaviour:
   touch: {x: 0, y: 0}
   hit: {fileID: 253754270}
   tracker: {fileID: 0}
-  myLine: {fileID: 0}
 --- !u!54 &1328755308
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -32152,7 +32151,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1328755305}
   m_LocalRotation: {x: -0, y: 0.577146, z: -0, w: 0.81664103}
-  m_LocalPosition: {x: -92.68, y: 1.644, z: 0.71}
+  m_LocalPosition: {x: 61.4, y: 1.644, z: 56.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 821120446}

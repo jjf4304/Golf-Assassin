@@ -16,8 +16,9 @@ public class KillZone : MonoBehaviour
     void Update()
     {
         if(player.transform.position.y < killHeight){
-            
-            Application.LoadLevel( SceneManager.GetActiveScene().buildIndex);
+
+            //Application.LoadLevel( SceneManager.GetActiveScene().buildIndex);
+            GetComponent<MenuNav>().RestartLevel();
         }
     }
 }
